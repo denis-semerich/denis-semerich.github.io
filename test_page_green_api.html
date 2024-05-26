@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>GREEN-API Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+        .form-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .response-container {
+            flex: 1;
+            border-left: 1px solid #ccc;
+            padding-left: 20px;
+        }
+        label, button {
+            display: block;
+            margin: 10px 0;
+        }
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .response {
+            white-space: pre-wrap;
+            background: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>GREEN-API Test Page</h1>
+            <div>
+                <label for="idInstance">ID Instance:</label>
+                <input type="text" id="idInstance" placeholder="Введите ID Instance">
+            </div>
+            <div>
+                <label for="apiTokenInstance">API Token Instance:</label>
+                <input type="text" id="apiTokenInstance" placeholder="Введите API Token Instance">
+            </div>
+            <button onclick="getSettings()">Get Settings</button>
+            <button onclick="getStateInstance()">Get State Instance</button>
+            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="sendFileByUrl()">Send File By URL</button>
+        </div>
+        <div class="response-container">
+            <h2>Response</h2>
+            <div id="response" class="response" readonly></div>
+        </div>
+    </div>
+    <script>
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const idInstance = document.getElementById('idInstance').value;
+            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+            const url = `https://api.green-api.com/waInstance${idInstance}/${endpoint}/${apiTokenInstance}`;
+
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+                const response = await fetch(url, options);
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function getSettings() {
+            apiCall('getSettings');
+        }
+
+        function getStateInstance() {
+            apiCall('getStateInstance');
+        }
+
+        function sendMessage() {
+            const payload = {
+                chatId: '123456789@c.us',
+                message: 'Привет! Это тестовое сообщение.'
+            };
+            apiCall('sendMessage', 'POST', payload);
+        }
+
+        function sendFileByUrl() {
+            const payload = {
+                chatId: '123456789@c.us',
+                urlFile: 'https://example.com/file.pdf',
+                caption: 'Пример файла'
+            };
+            apiCall('sendFileByUrl', 'POST', payload);
+        }
+    </script>
+</body>
+</html>
