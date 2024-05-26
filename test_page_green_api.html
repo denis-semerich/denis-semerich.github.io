@@ -17,7 +17,7 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 20px;
-            max-width: 900px;
+            max-width: 800px;
             width: 100%;
         }
         .form-container {
@@ -43,7 +43,7 @@
             background: #f0f0f0;
             padding: 10px;
             border: 1px solid #ccc;
-            height: 400px;
+            height: 300px;
             overflow: auto;
         }
     </style>
@@ -59,22 +59,6 @@
             <div>
                 <label for="apiTokenInstance">API Token Instance:</label>
                 <input type="text" id="apiTokenInstance" placeholder="Введите API Token Instance">
-            </div>
-            <div>
-                <label for="chatId">Chat ID:</label>
-                <input type="text" id="chatId" placeholder="Введите Chat ID">
-            </div>
-            <div>
-                <label for="message">Message:</label>
-                <input type="text" id="message" placeholder="Введите Message">
-            </div>
-            <div>
-                <label for="urlFile">File URL:</label>
-                <input type="text" id="urlFile" placeholder="Введите URL файла">
-            </div>
-            <div>
-                <label for="caption">Caption:</label>
-                <input type="text" id="caption" placeholder="Введите Caption">
             </div>
             <button onclick="getSettings()">Get Settings</button>
             <button onclick="getStateInstance()">Get State Instance</button>
@@ -119,23 +103,18 @@
         }
 
         function sendMessage() {
-            const chatId = document.getElementById('chatId').value;
-            const message = document.getElementById('message').value;
             const payload = {
-                chatId: chatId,
-                message: message
+                chatId: '123456789@c.us',
+                message: 'Привет! Это тестовое сообщение.'
             };
             apiCall('sendMessage', 'POST', payload);
         }
 
         function sendFileByUrl() {
-            const chatId = document.getElementById('chatId').value;
-            const urlFile = document.getElementById('urlFile').value;
-            const caption = document.getElementById('caption').value;
             const payload = {
-                chatId: chatId,
-                urlFile: urlFile,
-                caption: caption
+                chatId: '123456789@c.us',
+                urlFile: 'https://example.com/file.pdf',
+                caption: 'Пример файла'
             };
             apiCall('sendFileByUrl', 'POST', payload);
         }
